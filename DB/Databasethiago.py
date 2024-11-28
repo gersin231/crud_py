@@ -14,17 +14,23 @@ class Database():
         else:
             print("ERROR")
 
-    def insert_client(self):
+    def insert_client(self,tupla):
         self.connect()
         try:
-            args = ("Thiago Almeida","55","meulogin","333","222","CG")
+
             
-            self.cursor.execute('INSERT INTO cliente (nome,cpf,login,senha,fone,cidade) VALUES (%s,%s,%s,%s,%s,%s)',args)
+            self.cursor.execute('INSERT INTO cliente (nome,cpf,login,senha,fone,cidade) VALUES (%s,%s,%s,%s,%s,%s)',tupla)
             self.conn.commit()
-            print("Cliente cadastrado com sucesso!!!")
+            # print("Cliente cadastrado com sucesso!!!")
+            return True
+
 
         except Exception as err:
             print(err)
+        
+        finally :
+            self.close_connection()
+
 
     def insert_product(self):
         self.connect()
@@ -37,17 +43,24 @@ class Database():
 
         except Exception as err:
             print(err)
+                 
+        finally :
+            self.close_connection()
+
 
     def select_client(self):
         self.connect()
         try:
             self.cursor.execute("SELECT * FROM cliente")
             clientes = self.cursor.fetchall()
-            for cli in clientes:
-                print(cli)
+            return clientes
 
         except Exception as err:
             print(err)
+                 
+        finally :
+            self.close_connection()
+
 
     def select_client_by_id(self,id):
         self.connect()
@@ -58,35 +71,37 @@ class Database():
 
         except Exception as err:
             print(err)
+                 
+        finally :
+            self.close_connection()
 
-    def update_client(self,id):
+
+    def update_client(self,dados):
         self.connect()
         try:
-            cliente = list(self.select_client_by_id(id))
-            print(cliente)
-            cliente[1] = input("Digite o novo NOME: ")
-            cliente[2] = input("Digite o novo CPF: ")
-            cliente[3] = input("Digite o novo LOGIN: ")
-            cliente[4] = input("Digite o novo SENHA: ")
-            cliente[5] = input("Digite o novo FONE: ")
-            cliente[6] = input("Digite o novo CIDADE: ")
+         
 
             self.cursor.execute(f"""
                                 UPDATE cliente 
-                                SET nome = '{cliente[1]}',
-                                cpf = '{cliente[2]}',
-                                login = '{cliente[3]}', 
-                                senha = '{cliente[4]}', 
-                                fone = '{cliente[5]}',
-                                cidade = '{cliente[6]}' 
-                                WHERE id = {cliente[0]} 
+                                SET nome = '{dados[1]}',
+                                cpf = '{dados[2]}',
+                                login = '{dados[3]}', 
+                                senha = '{dados[4]}', 
+                                fone = '{dados[5]}',
+                                cidade = '{dados[6]}' 
+                                WHERE id = {dados[0]} 
                                 """)
             self.conn.commit()
-            cli_atualizado = self.select_client_by_id(cliente[0])
-            print(cli_atualizado)
+            # cli_atualizado = self.select_client_by_id(dados[0])
+            # print(cli_atualizado)
+            return True
         
         except Exception as erro:
             print(erro)
+                 
+        finally :
+            self.close_connection()
+
 
     def delete_client(self,id):
         self.connect()
@@ -96,7 +111,10 @@ class Database():
             print("CLiente deletado com sucesso!!!")
 
         except Exception as erro:
-            print(erro)
+            print(erro)     
+        finally :
+            self.close_connection()
+
     
 
     def close_connection(self):

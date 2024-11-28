@@ -6,7 +6,7 @@ class Database():
  
     def connect(self):
         self.conn = mysql.connector.connect(
-        host='127.0.0.1',
+        host='localhost',
         database=self.banco,
         user='root',
         password=''
